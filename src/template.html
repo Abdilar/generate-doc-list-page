@@ -1,0 +1,164 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documentation</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+
+<body class="bg-light">
+  <main class="container">
+    <div class="d-flex align-items-center p-3 my-3 rounded shadow-sm bg-white">
+      <img class="me-3" src="https://cdn.snappshop.ir/customer-production-assets/public/text-logo.webp?w=256&q=75"
+        alt="SnappShop logo" width="72" height="40">
+      <div class="lh-1">
+        <h1 class="h6 mb-0 lh-1">Documentation</h1>
+        <small class="text-gray-300">SnappShop Documentation - Since 2023</small>
+      </div>
+    </div>
+
+    <div class="my-3 p-3 bg-body rounded shadow-sm">
+      <h6 class="border-bottom pb-2 mb-0">Documents</h6>
+      <div id="list-wrapper"></div>
+      <div class="pt-3">
+        <nav aria-label="Page navigation">
+          <ul class="pagination justify-content-center mb-0">
+            <li id="prev-page" class="page-item" onclick="prevPage()">
+              <a class="page-link">Previous</a>
+            </li>
+            <li id="next-page" class="page-item" onclick="nextPage()">
+              <a class="page-link" href="#">Next</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+    </div>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+  <script>
+    const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
+    const PAGE_SIZE = 10;
+    let currentPage = 1
+    const data = fetch('./data.json', { method: 'GET' }).then(async (response) => {
+      const json = await response.json();
+      console.log({ json })
+    })
+    let directories = `${directories}`
+    directories = directories.sort(collator.compare)
+    const pages = Math.ceil(directories.length / PAGE_SIZE)
+
+    generatePages()
+    updateActiveButton(currentPage)
+
+    const getListItemTemplate = (directory) => {
+      const path = `../docs/${directory}/index.html`
+      const divElement = document.createElement('div')
+      divElement.className = 'd-flex text-body-secondary pt-3 border-bottom'
+      divElement.innerHTML = `
+          <p class="pb-3 mb-0 small lh-sm text-gray-dark" >
+            <a href="${path}" class="d-block link-primary">
+              <strong>${directory}</strong>
+            </a>
+            Some representative placeholder content, with some information about this user. Imagine this being some sort of status update, perhaps?
+          </p>
+        `
+      return divElement
+    }
+
+    function updateActiveButton(currentPage) {
+      const pageElements = document.getElementsByClassName('page-item')
+      if (pageElements) {
+        [...pageElements].forEach((liElement, index) => {
+          liElement.classList.remove('active')
+          if (index === currentPage) {
+            liElement.classList.add('active')
+          }
+        })
+      }
+    }
+
+    function getPageButtonTemplate(page) {
+      const liElement = document.createElement('li')
+      liElement.className = 'page-item'
+      liElement.innerHTML = `
+          <a class="page-link" href="#">${page}</a>
+        `
+      liElement.onclick = () => {
+        currentPage = page
+        updateActiveButton(page)
+        updatePrevNextButton(page)
+
+        appendListItem(page)
+      }
+      return liElement
+    }
+
+    function generatePages() {
+      const nextButtonElement = document.getElementById('next-page')
+      if (nextButtonElement) {
+        console.log(Array(pages).fill(0));
+        Array(pages).fill(0).forEach((_, index) => {
+          const element = getPageButtonTemplate(index + 1)
+          console.log({ element });
+          nextButtonElement.parentNode.insertBefore(element, nextButtonElement.previousSibling);
+        })
+      }
+    }
+
+    const appendListItem = (page = 1) => {
+      const listWrapperElement = document.getElementById('list-wrapper')
+      if (listWrapperElement) {
+        listWrapperElement.innerHTML = ''
+        const from = (page - 1) * PAGE_SIZE
+        const to = page < pages ? page * PAGE_SIZE : directories.length - 1
+        directories.slice(from, to).forEach(directory => {
+          const element = getListItemTemplate(directory)
+          listWrapperElement.appendChild(element)
+        })
+      }
+    }
+    appendListItem(currentPage)
+    updatePrevNextButton(currentPage)
+
+    function updatePrevNextButton(currentPage) {
+      console.log({ currentPage, pages });
+      const nextElement = document.getElementById('next-page')
+      const prevElement = document.getElementById('prev-page')
+      if (nextElement) {
+        currentPage >= pages ? nextElement.classList.add('disabled') : nextElement.classList.remove('disabled')
+      }
+      if (prevElement) {
+        currentPage <= 1 ? prevElement.classList.add('disabled') : prevElement.classList.remove('disabled')
+      }
+    }
+
+    function nextPage() {
+
+      updatePrevNextButton(currentPage + 1)
+
+
+      if (currentPage >= pages) return;
+      currentPage++
+      updateActiveButton(currentPage)
+      appendListItem(currentPage)
+    }
+
+    function prevPage() {
+
+      updatePrevNextButton(currentPage - 1)
+
+      if (currentPage <= 1) return;
+      currentPage--
+      updateActiveButton(currentPage)
+      appendListItem(currentPage)
+    }
+    console.log({ directories, pages });
+  </script>
+</body>
+
+</html>

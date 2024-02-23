@@ -1,0 +1,25 @@
+{
+  "name": "generate-doc-list-page",
+  "version": "1.0.0",
+  "description": "",
+  "main": "generate-page.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Abdilar/generate-doc-list-page.git"
+  },
+  "author": "Saeed Abdilar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Abdilar/generate-doc-list-page/issues"
+  },
+  "homepage": "https://github.com/Abdilar/generate-doc-list-page#readme",
+  "devDependencies": {
+    "jsdoc": "^4.0.2"
+  }
+}

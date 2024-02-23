@@ -1,2 +1,6 @@
+# Local files
 .vscode
 .DS_Store
+
+# Local packages
+node_modules

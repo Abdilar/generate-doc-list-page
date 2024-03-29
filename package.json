@@ -1,0 +1,30 @@
+{
+  "name": "generate-doc-list-page",
+  "version": "1.0.0",
+  "description": "",
+  "main": "generate-page.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "export-envs": "node env.js",
+    "remove-doc-version-list": "rm -f ./doc-version-list.json",
+    "aws": "aws s3 --endpoint-url=\"https://s3.thr1.sotoon.ir\" ls seller-production-assets --output=\"json\" --no-paginate >> doc-version-list.json && node documentation.js",
+    "start": "run-s remove-doc-version-list aws export-envs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Abdilar/generate-doc-list-page.git"
+  },
+  "author": "Saeed Abdilar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Abdilar/generate-doc-list-page/issues"
+  },
+  "homepage": "https://github.com/Abdilar/generate-doc-list-page#readme",
+  "devDependencies": {
+    "dotenv": "^16.4.5",
+    "env-cmd": "^10.1.0",
+    "npm-run-all": "^4.1.5"
+  }
+}
